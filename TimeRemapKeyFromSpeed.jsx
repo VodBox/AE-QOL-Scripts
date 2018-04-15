@@ -7,7 +7,9 @@ function timeRemapKeyFromSpeed(speed) {
     for(var i = 0; i < comp.selectedLayers.length; i++) {
         var layer = comp.selectedLayers[i];
         var remap = layer.timeRemap;
-        if(layer.time < remap.keyTime(1)) {
+        if(remap.numKeys < 1) {
+            alert(layer.name + " does not have time remapping enabled, or is missing keyframes.");
+        } else if(layer.time < remap.keyTime(1)) {
             remap.setValueAtTime(layer.time, remap.keyValue(1) + speed * (layer.time - remap.keyTime(1)));
         } else {
             var curKey = remap.nearestKeyIndex(layer.time);
