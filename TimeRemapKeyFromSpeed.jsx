@@ -3,16 +3,19 @@ Places a time remap keyframe at the playhead on the selected layer, and sets it 
 If the playhead is located before any keyframes, it will set the time to have playback from that point match the speed.
 **/
 function timeRemapKeyFromSpeed(speed) {
-    var layer = app.project.activeItem.selectedLayers[0];
-    var remap = layer.timeRemap;
-    if(layer.time < remap.keyTime(1)) {
-        remap.setValueAtTime(layer.time, remap.keyValue(1) + speed * (layer.time - remap.keyTime(1)));
-    } else {
-        var curKey = remap.nearestKeyIndex(layer.time);
-        if(layer.time < remap.keyTime(curKey)) {
-             curKey--;
+    var comp = app.project.activeItem;
+    for(var i = 0; i < comp.selectedLayers.length; i++) {
+        var layer = comp.selectedLayers[i];
+        var remap = layer.timeRemap;
+        if(layer.time < remap.keyTime(1)) {
+            remap.setValueAtTime(layer.time, remap.keyValue(1) + speed * (layer.time - remap.keyTime(1)));
+        } else {
+            var curKey = remap.nearestKeyIndex(layer.time);
+            if(layer.time < remap.keyTime(curKey)) {
+                 curKey--;
+            }
+            remap.setValueAtTime(layer.time, remap.keyValue(curKey) + speed * (layer.time - remap.keyTime(curKey)));
         }
-        remap.setValueAtTime(layer.time, remap.keyValue(curKey) + speed * (layer.time - remap.keyTime(curKey)));
     }
 }
 
