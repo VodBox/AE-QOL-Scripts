@@ -1,4 +1,8 @@
-﻿function timeRemapKeyFromSpeed(speed) {
+﻿/**
+Places a time remap keyframe at the playhead on the selected layer, and sets it to a time to make playback match the value of "speed" from the previous keyframe.
+If the playhead is located before any keyframes, it will set the time to have playback from that point match the speed.
+**/
+function timeRemapKeyFromSpeed(speed) {
     var layer = app.project.activeItem.selectedLayers[0];
     var remap = layer.timeRemap;
     if(layer.time < remap.keyTime(1)) {
@@ -12,11 +16,13 @@
     }
 }
 
+// Initialize dialog box's UI
 var dlg = new Window('dialog', 'Keyframe Prompt');
 var slider = dlg.add('slider', undefined, 1, -5, 5);
 var textNum = dlg.add('statictext', undefined, 'Speed: 1.0x');
 var add = dlg.add('button', undefined, 'Add Keyframe');
 
+// When user moves slider, will update the text.
 slider.onChanging = function() {
     var speed = slider.value;
     if(speed >= 0) {
@@ -26,10 +32,12 @@ slider.onChanging = function() {
     }
 }
 
+// On pressing the "Add Keyframe" button, function timeRemapKeyFromSpeed is called using slider value, before closing the dialog box.
 add.onClick = function() {
     timeRemapKeyFromSpeed(slider.value);
     dlg.close();
 }
 
+// Open dialog box in center of screen.
 dlg.center();
 dlg.show();
